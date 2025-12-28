@@ -1,0 +1,188 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyPiW1tf/Y7wammQmdlNNDaD",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/josuecas1006-ux/Trading1.0-personal/blob/master/creador%20de%20csv\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "MS7EPx5Gy17c",
+        "outputId": "02136846-8fa3-4596-aeb7-e0a95b9545c2"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Requirement already satisfied: yfinance in /usr/local/lib/python3.12/dist-packages (0.2.66)\n",
+            "Requirement already satisfied: pandas in /usr/local/lib/python3.12/dist-packages (2.3.3)\n",
+            "Requirement already satisfied: pandas_ta in /usr/local/lib/python3.12/dist-packages (0.4.71b0)\n",
+            "Requirement already satisfied: numpy in /usr/local/lib/python3.12/dist-packages (2.2.6)\n",
+            "Requirement already satisfied: requests>=2.31 in /usr/local/lib/python3.12/dist-packages (from yfinance) (2.32.4)\n",
+            "Requirement already satisfied: multitasking>=0.0.7 in /usr/local/lib/python3.12/dist-packages (from yfinance) (0.0.12)\n",
+            "Requirement already satisfied: platformdirs>=2.0.0 in /usr/local/lib/python3.12/dist-packages (from yfinance) (4.5.1)\n",
+            "Requirement already satisfied: pytz>=2022.5 in /usr/local/lib/python3.12/dist-packages (from yfinance) (2025.2)\n",
+            "Requirement already satisfied: frozendict>=2.3.4 in /usr/local/lib/python3.12/dist-packages (from yfinance) (2.4.7)\n",
+            "Requirement already satisfied: peewee>=3.16.2 in /usr/local/lib/python3.12/dist-packages (from yfinance) (3.18.3)\n",
+            "Requirement already satisfied: beautifulsoup4>=4.11.1 in /usr/local/lib/python3.12/dist-packages (from yfinance) (4.13.5)\n",
+            "Requirement already satisfied: curl_cffi>=0.7 in /usr/local/lib/python3.12/dist-packages (from yfinance) (0.13.0)\n",
+            "Requirement already satisfied: protobuf>=3.19.0 in /usr/local/lib/python3.12/dist-packages (from yfinance) (5.29.5)\n",
+            "Requirement already satisfied: websockets>=13.0 in /usr/local/lib/python3.12/dist-packages (from yfinance) (15.0.1)\n",
+            "Requirement already satisfied: python-dateutil>=2.8.2 in /usr/local/lib/python3.12/dist-packages (from pandas) (2.9.0.post0)\n",
+            "Requirement already satisfied: tzdata>=2022.7 in /usr/local/lib/python3.12/dist-packages (from pandas) (2025.3)\n",
+            "Requirement already satisfied: numba==0.61.2 in /usr/local/lib/python3.12/dist-packages (from pandas_ta) (0.61.2)\n",
+            "Requirement already satisfied: tqdm>=4.67.1 in /usr/local/lib/python3.12/dist-packages (from pandas_ta) (4.67.1)\n",
+            "Requirement already satisfied: llvmlite<0.45,>=0.44.0dev0 in /usr/local/lib/python3.12/dist-packages (from numba==0.61.2->pandas_ta) (0.44.0)\n",
+            "Requirement already satisfied: soupsieve>1.2 in /usr/local/lib/python3.12/dist-packages (from beautifulsoup4>=4.11.1->yfinance) (2.8)\n",
+            "Requirement already satisfied: typing-extensions>=4.0.0 in /usr/local/lib/python3.12/dist-packages (from beautifulsoup4>=4.11.1->yfinance) (4.15.0)\n",
+            "Requirement already satisfied: cffi>=1.12.0 in /usr/local/lib/python3.12/dist-packages (from curl_cffi>=0.7->yfinance) (2.0.0)\n",
+            "Requirement already satisfied: certifi>=2024.2.2 in /usr/local/lib/python3.12/dist-packages (from curl_cffi>=0.7->yfinance) (2025.11.12)\n",
+            "Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.12/dist-packages (from python-dateutil>=2.8.2->pandas) (1.17.0)\n",
+            "Requirement already satisfied: charset_normalizer<4,>=2 in /usr/local/lib/python3.12/dist-packages (from requests>=2.31->yfinance) (3.4.4)\n",
+            "Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.12/dist-packages (from requests>=2.31->yfinance) (3.11)\n",
+            "Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.12/dist-packages (from requests>=2.31->yfinance) (2.5.0)\n",
+            "Requirement already satisfied: pycparser in /usr/local/lib/python3.12/dist-packages (from cffi>=1.12.0->curl_cffi>=0.7->yfinance) (2.23)\n"
+          ]
+        }
+      ],
+      "source": [
+        "pip install yfinance pandas pandas_ta numpy"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import yfinance as yf\n",
+        "import pandas as pd\n",
+        "import pandas_ta as ta\n",
+        "import numpy as np\n",
+        "from datetime import datetime, timedelta\n",
+        "\n",
+        "# 1. Configuración básica\n",
+        "TICKER = 'AAPL'\n",
+        "dias_atras = 10 * 365\n",
+        "fecha_fin = datetime.now()\n",
+        "fecha_inicio = fecha_fin - timedelta(days=dias_atras)\n",
+        "nombre_archivo = \"AAPL_Completo_10_anios.csv\"\n",
+        "\n",
+        "print(f\"Descargando datos para {TICKER}...\")\n",
+        "\n",
+        "# 2. Descarga de datos\n",
+        "try:\n",
+        "    df = yf.download(TICKER, start=fecha_inicio.date(), end=fecha_fin.date(), progress=True, auto_adjust=False)\n",
+        "except Exception as e:\n",
+        "    print(f\"Error en la descarga: {e}\")\n",
+        "    exit()\n",
+        "\n",
+        "# Estandarizar nombres de columnas\n",
+        "if isinstance(df.columns, pd.MultiIndex):\n",
+        "    df.columns = df.columns.to_flat_index().map(lambda x: x[0])\n",
+        "df.columns = df.columns.str.lower().str.replace(' ', '_')\n",
+        "\n",
+        "# 3. EL TRUCO: Reindexar para tener TODOS los días del calendario\n",
+        "# Creamos un calendario diario sin saltos\n",
+        "calendario = pd.date_range(start=df.index.min(), end=df.index.max(), freq='D')\n",
+        "df = df.reindex(calendario)\n",
+        "\n",
+        "# Rellenar precios de fines de semana (el precio no cambia si no hay mercado)\n",
+        "df[['open', 'high', 'low', 'close', 'adj_close']] = df[['open', 'high', 'low', 'close', 'adj_close']].ffill()\n",
+        "\n",
+        "# El volumen los fines de semana es 0\n",
+        "df['volume'] = df['volume'].fillna(0)\n",
+        "\n",
+        "# Renombrar columnas para el modelo\n",
+        "df = df.rename(columns={\n",
+        "    'open': 'open_price',\n",
+        "    'high': 'day_high',\n",
+        "    'low': 'day_low',\n",
+        "    'volume': 'current_volume',\n",
+        "    'adj_close': 'close_price'\n",
+        "})\n",
+        "\n",
+        "# 4. Cálculo de Indicadores Técnicos\n",
+        "# Nota: Ahora los indicadores se calculan sobre 3,650 días seguidos\n",
+        "df.ta.sma(length=20, append=True, col_names=('SMA_20',))\n",
+        "df.ta.sma(length=200, append=True, col_names=('SMA_200',))\n",
+        "df.ta.rsi(length=14, append=True, col_names=('RSI_14',))\n",
+        "df.ta.macd(fast=12, slow=26, signal=9, append=True)\n",
+        "\n",
+        "# Limpiar nombres de MACD\n",
+        "df = df.rename(columns={\n",
+        "    'MACD_12_26_9': 'MACD',\n",
+        "    'MACDh_12_26_9': 'MACD_histogram',\n",
+        "    'MACDs_12_26_9': 'MACD_signal'\n",
+        "})\n",
+        "\n",
+        "# 5. Limpieza y Exportación\n",
+        "# Quitamos solo las filas iniciales donde no hay suficientes datos para la media de 200\n",
+        "df = df.dropna(subset=['SMA_200'])\n",
+        "\n",
+        "df.index.name = 'timestamp'\n",
+        "df.reset_index(inplace=True)\n",
+        "df.to_csv(nombre_archivo, index=False)\n",
+        "\n",
+        "print(f\"¡Listo! Archivo creado con {len(df)} filas.\")\n",
+        "print(f\"Nombre del archivo: {nombre_archivo}\")"
+      ],
+      "metadata": {
+        "id": "pEOwO85L7rh_",
+        "outputId": "b59b7dd3-ac3c-44db-c2d8-39ffc11d1495",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Descargando datos para AAPL...\n"
+          ]
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": [
+            "\r[*********************100%***********************]  1 of 1 completed\n"
+          ]
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "¡Listo! Archivo creado con 3451 filas.\n",
+            "Nombre del archivo: AAPL_Completo_10_anios.csv\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
